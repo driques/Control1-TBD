@@ -28,7 +28,7 @@ Utilizar git para poder copiar el repositorio, o de plano descargarlo.
 * **Joseph Salas**
 * **Vicente Vargas**
 * **Felipe Fernandez**
-* ***Ignacio Villarroel**
+* **Ignacio Villarroel**
 * **Diego Riquelme**
 
 
