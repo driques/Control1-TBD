@@ -1,6 +1,6 @@
 # LABORATORIO TALLER DE BASE DE DATOS/BASE DE DATOS AVANZADA
 
-_.En el presente laboratorio se busca responder las problemáticas entregadas por la coordinación para el grupo 4._
+_En el presente laboratorio se busca responder las problemáticas entregadas por la coordinación para el grupo 4._
 
 ## Comenzando 🚀
 
