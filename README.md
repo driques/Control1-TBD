@@ -25,6 +25,7 @@ Utilizar git para poder copiar el repositorio, o de plano descargarlo.
 * [GitHub](https://github.com/) - Controlador de versiones.
 
 ## Autores ✒️
+* **Alen Galindo**
 * **Joseph Salas**
 * **Vicente Vargas**
 * **Felipe Fernandez**
