@@ -10,6 +10,24 @@ try:
         host="localhost", user="postgres", password="123", database="Aerolineas")
     cursor = connection.cursor()
 
+    ###### Delete ######
+    # Delete all rows from table
+    cursor.execute("TRUNCATE TABLE avion CASCADE")
+    cursor.execute("TRUNCATE TABLE clase CASCADE")
+    cursor.execute("TRUNCATE TABLE cliente CASCADE")
+    cursor.execute("TRUNCATE TABLE compania CASCADE")
+    cursor.execute("TRUNCATE TABLE compra CASCADE")
+    cursor.execute("TRUNCATE TABLE empleado CASCADE")
+    cursor.execute("TRUNCATE TABLE modelo CASCADE")
+    cursor.execute("TRUNCATE TABLE pais CASCADE")
+    cursor.execute("TRUNCATE TABLE viaje CASCADE;")
+    cursor.execute("TRUNCATE TABLE vuelo CASCADE")
+    connection.commit()
+
+    print('Datos de tablas existentes eleminadas')
+    
+    ###### Insert ######
+
     ### PAIS
     for k in range(21):
         cursor.execute(
@@ -83,7 +101,7 @@ try:
     # log_vuelo_empleado
 
     connection.commit()
-    print('Base de datos rellenada')
+    print('Base de datos rellenada con nuevos datos')
 
 except Exception as e:
     print(e)
