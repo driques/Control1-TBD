@@ -1,4 +1,4 @@
-# LABORATORIO TALLER DE BASE DE DATOS/BASE DE DATOS AVANZADA
+# CONTROL 1 TALLER DE BASE DE DATOS/BASE DE DATOS AVANZADA
 
 _En el presente laboratorio se busca responder las problemáticas entregadas por la coordinación para el grupo 4._
 
