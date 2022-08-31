@@ -7,7 +7,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="123", database="Aerolineas")
+        host="localhost", user="postgres", password="postgres", database="Aerolineas2")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -79,7 +79,7 @@ try:
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-1y", end_date="now", tzinfo=None), randint(0, len(listacompanias)-1), randint(0, len(listacompanias)-1)))
+            "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, len(listacompanias)-1), randint(0, len(listacompanias)-1)))
         id += 1
 
     # PASAJE
@@ -93,7 +93,14 @@ try:
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO compra (id_compra, monto, fecha , id_cliente, id_pasaje) values(%s,%s,%s,%s,%s)", (id, randint(1000, 8000), fake.date(), randint(0, 19), randint(0, 19)))
+            "INSERT INTO compra (id_compra, monto, fecha , id_cliente, id_pasaje) values(%s,%s,%s,%s,%s)", (id, randint(1000, 8000), fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, 19), randint(0, 19)))
+        id += 1
+
+    # VIAJE
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO viaje (id_viaje, id_pasaje, id_vuelo) values(%s,%s,%s)", (id, randint(0, 19), randint(0, 19)))
         id += 1
 
     # log_vuelo_avion
