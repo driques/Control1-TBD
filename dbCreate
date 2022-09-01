@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.3
--- Dumped by pg_dump version 14.3
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
 
--- Started on 2022-08-30 22:32:46
+-- Started on 2022-08-31 18:28:40
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,7 +23,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 209 (class 1259 OID 27307)
+-- TOC entry 209 (class 1259 OID 29368)
 -- Name: avion; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -38,7 +38,7 @@ CREATE TABLE public.avion (
 ALTER TABLE public.avion OWNER TO postgres;
 
 --
--- TOC entry 210 (class 1259 OID 27310)
+-- TOC entry 210 (class 1259 OID 29371)
 -- Name: clase; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -51,7 +51,7 @@ CREATE TABLE public.clase (
 ALTER TABLE public.clase OWNER TO postgres;
 
 --
--- TOC entry 211 (class 1259 OID 27313)
+-- TOC entry 211 (class 1259 OID 29374)
 -- Name: cliente; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -66,20 +66,20 @@ CREATE TABLE public.cliente (
 ALTER TABLE public.cliente OWNER TO postgres;
 
 --
--- TOC entry 212 (class 1259 OID 27316)
+-- TOC entry 212 (class 1259 OID 29377)
 -- Name: compania; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.compania (
     id_compania integer NOT NULL,
-    nombre character varying(30) NOT NULL
+    nombre character varying(50) NOT NULL
 );
 
 
 ALTER TABLE public.compania OWNER TO postgres;
 
 --
--- TOC entry 213 (class 1259 OID 27319)
+-- TOC entry 213 (class 1259 OID 29380)
 -- Name: compra; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -95,14 +95,14 @@ CREATE TABLE public.compra (
 ALTER TABLE public.compra OWNER TO postgres;
 
 --
--- TOC entry 214 (class 1259 OID 27324)
+-- TOC entry 214 (class 1259 OID 29385)
 -- Name: empleado; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.empleado (
     id_empleado integer NOT NULL,
     dni character varying(30) NOT NULL,
-    nombre character varying(50) NOT NULL,
+    nombre character varying(80) NOT NULL,
     sueldo numeric NOT NULL,
     id_compania integer NOT NULL
 );
@@ -111,7 +111,7 @@ CREATE TABLE public.empleado (
 ALTER TABLE public.empleado OWNER TO postgres;
 
 --
--- TOC entry 220 (class 1259 OID 27431)
+-- TOC entry 215 (class 1259 OID 29390)
 -- Name: log_vuelo_avion; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -125,7 +125,7 @@ CREATE TABLE public.log_vuelo_avion (
 ALTER TABLE public.log_vuelo_avion OWNER TO postgres;
 
 --
--- TOC entry 222 (class 1259 OID 27446)
+-- TOC entry 216 (class 1259 OID 29393)
 -- Name: log_vuelo_empleado; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -139,7 +139,7 @@ CREATE TABLE public.log_vuelo_empleado (
 ALTER TABLE public.log_vuelo_empleado OWNER TO postgres;
 
 --
--- TOC entry 221 (class 1259 OID 27445)
+-- TOC entry 217 (class 1259 OID 29396)
 -- Name: log_vuelo_empleado_id_log_vuelo_empleado_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -155,7 +155,7 @@ ALTER TABLE public.log_vuelo_empleado_id_log_vuelo_empleado_seq OWNER TO postgre
 
 --
 -- TOC entry 3403 (class 0 OID 0)
--- Dependencies: 221
+-- Dependencies: 217
 -- Name: log_vuelo_empleado_id_log_vuelo_empleado_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -163,7 +163,7 @@ ALTER SEQUENCE public.log_vuelo_empleado_id_log_vuelo_empleado_seq OWNED BY publ
 
 
 --
--- TOC entry 219 (class 1259 OID 27430)
+-- TOC entry 218 (class 1259 OID 29397)
 -- Name: log_vuelo_id_avion_vuelo_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -179,7 +179,7 @@ ALTER TABLE public.log_vuelo_id_avion_vuelo_seq OWNER TO postgres;
 
 --
 -- TOC entry 3404 (class 0 OID 0)
--- Dependencies: 219
+-- Dependencies: 218
 -- Name: log_vuelo_id_avion_vuelo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -187,25 +187,25 @@ ALTER SEQUENCE public.log_vuelo_id_avion_vuelo_seq OWNED BY public.log_vuelo_avi
 
 
 --
--- TOC entry 215 (class 1259 OID 27329)
+-- TOC entry 219 (class 1259 OID 29398)
 -- Name: modelo; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.modelo (
     id_modelo integer NOT NULL,
-    nombre character varying(30) NOT NULL
+    nombre character varying(50) NOT NULL
 );
 
 
 ALTER TABLE public.modelo OWNER TO postgres;
 
 --
--- TOC entry 216 (class 1259 OID 27332)
+-- TOC entry 220 (class 1259 OID 29401)
 -- Name: pais; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.pais (
-    nombre character varying(30) NOT NULL,
+    nombre character varying(70) NOT NULL,
     id_pais integer NOT NULL
 );
 
@@ -213,7 +213,7 @@ CREATE TABLE public.pais (
 ALTER TABLE public.pais OWNER TO postgres;
 
 --
--- TOC entry 217 (class 1259 OID 27335)
+-- TOC entry 221 (class 1259 OID 29404)
 -- Name: pasaje; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -227,7 +227,7 @@ CREATE TABLE public.pasaje (
 ALTER TABLE public.pasaje OWNER TO postgres;
 
 --
--- TOC entry 224 (class 1259 OID 27524)
+-- TOC entry 222 (class 1259 OID 29407)
 -- Name: viaje; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -241,7 +241,7 @@ CREATE TABLE public.viaje (
 ALTER TABLE public.viaje OWNER TO postgres;
 
 --
--- TOC entry 223 (class 1259 OID 27523)
+-- TOC entry 223 (class 1259 OID 29410)
 -- Name: viaje_id_viaje_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -265,7 +265,7 @@ ALTER SEQUENCE public.viaje_id_viaje_seq OWNED BY public.viaje.id_viaje;
 
 
 --
--- TOC entry 218 (class 1259 OID 27340)
+-- TOC entry 224 (class 1259 OID 29411)
 -- Name: vuelo; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -280,7 +280,7 @@ CREATE TABLE public.vuelo (
 ALTER TABLE public.vuelo OWNER TO postgres;
 
 --
--- TOC entry 3214 (class 2604 OID 27434)
+-- TOC entry 3214 (class 2604 OID 29414)
 -- Name: log_vuelo_avion id_avion_vuelo; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -288,7 +288,7 @@ ALTER TABLE ONLY public.log_vuelo_avion ALTER COLUMN id_avion_vuelo SET DEFAULT 
 
 
 --
--- TOC entry 3215 (class 2604 OID 27449)
+-- TOC entry 3215 (class 2604 OID 29415)
 -- Name: log_vuelo_empleado id_log_vuelo_empleado; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -296,7 +296,7 @@ ALTER TABLE ONLY public.log_vuelo_empleado ALTER COLUMN id_log_vuelo_empleado SE
 
 
 --
--- TOC entry 3216 (class 2604 OID 27527)
+-- TOC entry 3216 (class 2604 OID 29416)
 -- Name: viaje id_viaje; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -304,7 +304,7 @@ ALTER TABLE ONLY public.viaje ALTER COLUMN id_viaje SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3218 (class 2606 OID 27346)
+-- TOC entry 3218 (class 2606 OID 29418)
 -- Name: avion avion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -313,7 +313,7 @@ ALTER TABLE ONLY public.avion
 
 
 --
--- TOC entry 3220 (class 2606 OID 27348)
+-- TOC entry 3220 (class 2606 OID 29420)
 -- Name: clase clase_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -322,7 +322,7 @@ ALTER TABLE ONLY public.clase
 
 
 --
--- TOC entry 3222 (class 2606 OID 27350)
+-- TOC entry 3222 (class 2606 OID 29422)
 -- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -331,7 +331,7 @@ ALTER TABLE ONLY public.cliente
 
 
 --
--- TOC entry 3224 (class 2606 OID 27352)
+-- TOC entry 3224 (class 2606 OID 29424)
 -- Name: compania compania_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -340,7 +340,7 @@ ALTER TABLE ONLY public.compania
 
 
 --
--- TOC entry 3226 (class 2606 OID 27354)
+-- TOC entry 3226 (class 2606 OID 29426)
 -- Name: compra compra_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -349,7 +349,7 @@ ALTER TABLE ONLY public.compra
 
 
 --
--- TOC entry 3228 (class 2606 OID 27356)
+-- TOC entry 3228 (class 2606 OID 29428)
 -- Name: empleado empleado_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -358,7 +358,7 @@ ALTER TABLE ONLY public.empleado
 
 
 --
--- TOC entry 3240 (class 2606 OID 27451)
+-- TOC entry 3232 (class 2606 OID 29430)
 -- Name: log_vuelo_empleado id_log_vuelo_empleado; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -367,7 +367,7 @@ ALTER TABLE ONLY public.log_vuelo_empleado
 
 
 --
--- TOC entry 3238 (class 2606 OID 27463)
+-- TOC entry 3230 (class 2606 OID 29432)
 -- Name: log_vuelo_avion log_vuelo_avion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -376,7 +376,7 @@ ALTER TABLE ONLY public.log_vuelo_avion
 
 
 --
--- TOC entry 3230 (class 2606 OID 27358)
+-- TOC entry 3234 (class 2606 OID 29434)
 -- Name: modelo modelo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -385,7 +385,7 @@ ALTER TABLE ONLY public.modelo
 
 
 --
--- TOC entry 3232 (class 2606 OID 27360)
+-- TOC entry 3236 (class 2606 OID 29436)
 -- Name: pais pais_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -394,7 +394,7 @@ ALTER TABLE ONLY public.pais
 
 
 --
--- TOC entry 3234 (class 2606 OID 27362)
+-- TOC entry 3238 (class 2606 OID 29438)
 -- Name: pasaje pasaje_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -403,7 +403,7 @@ ALTER TABLE ONLY public.pasaje
 
 
 --
--- TOC entry 3242 (class 2606 OID 27529)
+-- TOC entry 3240 (class 2606 OID 29440)
 -- Name: viaje vpkey_viaje; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -412,7 +412,7 @@ ALTER TABLE ONLY public.viaje
 
 
 --
--- TOC entry 3236 (class 2606 OID 27364)
+-- TOC entry 3242 (class 2606 OID 29442)
 -- Name: vuelo vuelo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -421,7 +421,7 @@ ALTER TABLE ONLY public.vuelo
 
 
 --
--- TOC entry 3253 (class 2606 OID 27435)
+-- TOC entry 3249 (class 2606 OID 29443)
 -- Name: log_vuelo_avion id_avion; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -430,7 +430,7 @@ ALTER TABLE ONLY public.log_vuelo_avion
 
 
 --
--- TOC entry 3249 (class 2606 OID 27365)
+-- TOC entry 3253 (class 2606 OID 29448)
 -- Name: pasaje id_clase_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -439,7 +439,7 @@ ALTER TABLE ONLY public.pasaje
 
 
 --
--- TOC entry 3246 (class 2606 OID 27370)
+-- TOC entry 3246 (class 2606 OID 29453)
 -- Name: compra id_cliente_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -448,7 +448,7 @@ ALTER TABLE ONLY public.compra
 
 
 --
--- TOC entry 3248 (class 2606 OID 27375)
+-- TOC entry 3248 (class 2606 OID 29458)
 -- Name: empleado id_compania_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -457,7 +457,7 @@ ALTER TABLE ONLY public.empleado
 
 
 --
--- TOC entry 3243 (class 2606 OID 27380)
+-- TOC entry 3243 (class 2606 OID 29463)
 -- Name: avion id_compania_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -466,7 +466,7 @@ ALTER TABLE ONLY public.avion
 
 
 --
--- TOC entry 3251 (class 2606 OID 27544)
+-- TOC entry 3257 (class 2606 OID 29468)
 -- Name: vuelo id_destino; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -475,7 +475,7 @@ ALTER TABLE ONLY public.vuelo
 
 
 --
--- TOC entry 3256 (class 2606 OID 27457)
+-- TOC entry 3251 (class 2606 OID 29473)
 -- Name: log_vuelo_empleado id_empleado; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -484,7 +484,7 @@ ALTER TABLE ONLY public.log_vuelo_empleado
 
 
 --
--- TOC entry 3244 (class 2606 OID 27390)
+-- TOC entry 3244 (class 2606 OID 29478)
 -- Name: avion id_modelo_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -493,7 +493,7 @@ ALTER TABLE ONLY public.avion
 
 
 --
--- TOC entry 3252 (class 2606 OID 27549)
+-- TOC entry 3258 (class 2606 OID 29483)
 -- Name: vuelo id_origen; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -502,7 +502,7 @@ ALTER TABLE ONLY public.vuelo
 
 
 --
--- TOC entry 3245 (class 2606 OID 27400)
+-- TOC entry 3245 (class 2606 OID 29488)
 -- Name: cliente id_pais_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -511,7 +511,7 @@ ALTER TABLE ONLY public.cliente
 
 
 --
--- TOC entry 3258 (class 2606 OID 27535)
+-- TOC entry 3255 (class 2606 OID 29493)
 -- Name: viaje id_pasaje; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -520,7 +520,7 @@ ALTER TABLE ONLY public.viaje
 
 
 --
--- TOC entry 3247 (class 2606 OID 27410)
+-- TOC entry 3247 (class 2606 OID 29498)
 -- Name: compra id_pasaje_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -529,7 +529,7 @@ ALTER TABLE ONLY public.compra
 
 
 --
--- TOC entry 3254 (class 2606 OID 27440)
+-- TOC entry 3250 (class 2606 OID 29503)
 -- Name: log_vuelo_avion id_vuelo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -538,7 +538,7 @@ ALTER TABLE ONLY public.log_vuelo_avion
 
 
 --
--- TOC entry 3255 (class 2606 OID 27452)
+-- TOC entry 3252 (class 2606 OID 29508)
 -- Name: log_vuelo_empleado id_vuelo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -547,7 +547,7 @@ ALTER TABLE ONLY public.log_vuelo_empleado
 
 
 --
--- TOC entry 3257 (class 2606 OID 27530)
+-- TOC entry 3256 (class 2606 OID 29513)
 -- Name: viaje id_vuelo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -556,7 +556,7 @@ ALTER TABLE ONLY public.viaje
 
 
 --
--- TOC entry 3250 (class 2606 OID 27464)
+-- TOC entry 3254 (class 2606 OID 29518)
 -- Name: pasaje id_vuelo_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -564,7 +564,7 @@ ALTER TABLE ONLY public.pasaje
     ADD CONSTRAINT id_vuelo_fk FOREIGN KEY (id_viaje) REFERENCES public.vuelo(id_vuelo) NOT VALID;
 
 
--- Completed on 2022-08-30 22:32:46
+-- Completed on 2022-08-31 18:28:40
 
 --
 -- PostgreSQL database dump complete
