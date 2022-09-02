@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS public.compra
     monto numeric NOT NULL,
     fecha date NOT NULL,
     id_compra integer NOT NULL,
-    id_cliente integer NOT NULL,
     id_pasaje integer NOT NULL,
     CONSTRAINT compra_pkey PRIMARY KEY (id_compra)
 );
