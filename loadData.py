@@ -7,7 +7,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="postgres", database="aeroline")
+        host="localhost", user="postgres", password="postgres", database="Aerolinea")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -18,12 +18,12 @@ try:
     cursor.execute("TRUNCATE TABLE compania CASCADE")
     cursor.execute("TRUNCATE TABLE compra CASCADE")
     cursor.execute("TRUNCATE TABLE empleado_vuelo CASCADE")
-    cursor.execute("TRUNCATE TABLE empleado CASCADE")
-    cursor.execute("TRUNCATE TABLE pasaje CASCADE")
     cursor.execute("TRUNCATE TABLE modelo CASCADE")
-    cursor.execute("TRUNCATE TABLE viaje CASCADE;")
-    cursor.execute("TRUNCATE TABLE vuelo CASCADE")
+    cursor.execute("TRUNCATE TABLE pasaje CASCADE")
     cursor.execute("TRUNCATE TABLE sueldo CASCADE")
+    cursor.execute("TRUNCATE TABLE empleado CASCADE")
+    cursor.execute("TRUNCATE TABLE vuelo CASCADE")
+    cursor.execute("TRUNCATE TABLE vuelo_cliente CASCADE")
     connection.commit()
 
     print('Datos de tablas existentes eleminadas')
@@ -31,8 +31,9 @@ try:
     ###### Insert ######
 
     ### CLIENTE
+    
     for k in range(20):
-        cursor.execute("INSERT INTO cliente (id_cliente, nombre, id_pais, dni) VALUES(%s,%s,%s,%s)",(k, fake.name(), randint(0, 20), fake.ean(length=8)))
+        cursor.execute("INSERT INTO cliente (id_cliente, nombre, dni, pais, id_vuelo) VALUES(%s,%s,%s,%s,%s)", (k, fake.name(), fake.ean(length=8), fake.country(), randint(0,20)))
 
     ### CLASE
     listaclases = ["Economy", "Premium economy", "Business", "First class"]
@@ -55,51 +56,30 @@ try:
     id = 0
     for k in listacompanias:
         cursor.execute(
-            "INSERT INTO compania (id_compania, nombre) VALUES(%s,%s)", (id, k))
+            "INSERT INTO compania (id_compania, nombre, id_cliente, fecha) VALUES(%s,%s,%s,%s)", (id, k, randint(0,19), fake.date()))
         id += 1
     
     ### AVION
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO avion (id_avion, id_modelo, id_compania, capacidad) VALUES(%s,%s,%s,%s)", (id, randint(0, len(listamodelos)-1), randint(0, len(listacompanias)-1), randint(160, 480)))
+            "INSERT INTO avion (id_avion, id_modelo, capacidad, id_compañia)  VALUES(%s,%s,%s,%s)", (id, randint(0,4), randint(100, 500), randint(0,4)))
         id += 1
         
     # EMPLEADO
     id = 0
     for k in range(40):
         cursor.execute(
-            "INSERT INTO empleado (id_empleado, dni, nombre, sueldo,id_compania) VALUES(%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(1000, 8000), randint(0, len(listacompanias)-1)))
+            "INSERT INTO empleado (id_empleado, dni, nombre, id_compania, id_avion, cargo) VALUES(%s,%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(0,4), randint(0,19), choice(["Piloto", "Azafata", "Jefe de vuelo", "Jefe de mantenimiento", "Mantenimiento"])))
         id += 1
         
     # VUELO
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, len(listacompanias)-1), randint(0, len(listacompanias)-1)))
-        id += 1
 
     # PASAJE
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO pasaje (id_pasaje, id_viaje, id_clase) values(%s,%s,%s)", (id, randint(0, 19), randint(0, len(listaclases)-1)))
-        id += 1
 
     # COMPRA
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO compra (id_compra, monto, fecha , id_cliente, id_pasaje) values(%s,%s,%s,%s,%s)", (id, randint(1000, 8000), fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, 19), randint(0, 19)))
-        id += 1
 
-    # VIAJE
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO viaje (id_viaje, id_pasaje, id_vuelo) values(%s,%s,%s)", (id, randint(0, 19), randint(0, 19)))
-        id += 1
-
+    
     # log_vuelo_avion
 
     # log_vuelo_empleado
