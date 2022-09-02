@@ -7,7 +7,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="postgres", database="Aerolineas2")
+        host="localhost", user="postgres", password="postgres", database="aeroline")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -17,21 +17,18 @@ try:
     cursor.execute("TRUNCATE TABLE cliente CASCADE")
     cursor.execute("TRUNCATE TABLE compania CASCADE")
     cursor.execute("TRUNCATE TABLE compra CASCADE")
+    cursor.execute("TRUNCATE TABLE empleado_vuelo CASCADE")
     cursor.execute("TRUNCATE TABLE empleado CASCADE")
+    cursor.execute("TRUNCATE TABLE pasaje CASCADE")
     cursor.execute("TRUNCATE TABLE modelo CASCADE")
-    cursor.execute("TRUNCATE TABLE pais CASCADE")
     cursor.execute("TRUNCATE TABLE viaje CASCADE;")
     cursor.execute("TRUNCATE TABLE vuelo CASCADE")
+    cursor.execute("TRUNCATE TABLE sueldo CASCADE")
     connection.commit()
 
     print('Datos de tablas existentes eleminadas')
     
     ###### Insert ######
-
-    ### PAIS
-    for k in range(21):
-        cursor.execute(
-            "INSERT INTO pais (nombre, id_pais) VALUES(%s,%s)", (fake.country(), k))
 
     ### CLIENTE
     for k in range(20):
