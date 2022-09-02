@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS public.avion
 (
     id_avion integer NOT NULL,
     id_modelo integer NOT NULL,
-    id_compania integer NOT NULL,
     capacidad integer NOT NULL,
     CONSTRAINT avion_pkey PRIMARY KEY (id_avion)
 );
@@ -24,7 +23,8 @@ CREATE TABLE IF NOT EXISTS public.cliente
     id_cliente integer NOT NULL,
     nombre character varying(50) COLLATE pg_catalog."default" NOT NULL,
     dni character varying(30) COLLATE pg_catalog."default" NOT NULL,
-    id_pais integer NOT NULL,
+    pais character varying(80) NOT NULL,
+    id_vuelo integer,
     CONSTRAINT cliente_pkey PRIMARY KEY (id_cliente)
 );
 
@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS public.compania
 (
     id_compania integer NOT NULL,
     nombre character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    id_cliente integer NOT NULL,
+    fecha date NOT NULL,
     CONSTRAINT compania_pkey PRIMARY KEY (id_compania)
 );
 
@@ -50,17 +52,9 @@ CREATE TABLE IF NOT EXISTS public.empleado
     id_empleado integer NOT NULL,
     dni character varying(30) COLLATE pg_catalog."default" NOT NULL,
     nombre character varying(80) COLLATE pg_catalog."default" NOT NULL,
-    sueldo numeric NOT NULL,
     id_compania integer NOT NULL,
+    id_avion integer NOT NULL,
     CONSTRAINT empleado_pkey PRIMARY KEY (id_empleado)
-);
-
-CREATE TABLE IF NOT EXISTS public.log_vuelo_empleado
-(
-    id_log_vuelo_empleado bigint NOT NULL DEFAULT nextval('log_vuelo_empleado_id_log_vuelo_empleado_seq'::regclass),
-    id_vuelo bigint NOT NULL,
-    id_empleado bigint NOT NULL,
-    CONSTRAINT id_log_vuelo_empleado PRIMARY KEY (id_log_vuelo_empleado)
 );
 
 CREATE TABLE IF NOT EXISTS public.modelo
@@ -70,13 +64,6 @@ CREATE TABLE IF NOT EXISTS public.modelo
     CONSTRAINT modelo_pkey PRIMARY KEY (id_modelo)
 );
 
-CREATE TABLE IF NOT EXISTS public.pais
-(
-    nombre character varying(70) COLLATE pg_catalog."default" NOT NULL,
-    id_pais integer NOT NULL,
-    CONSTRAINT pais_pkey PRIMARY KEY (id_pais)
-);
-
 CREATE TABLE IF NOT EXISTS public.pasaje
 (
     id_pasaje integer NOT NULL,
@@ -84,25 +71,38 @@ CREATE TABLE IF NOT EXISTS public.pasaje
     CONSTRAINT pasaje_pkey PRIMARY KEY (id_pasaje)
 );
 
-CREATE TABLE IF NOT EXISTS public.viaje
-(
-    id_viaje bigint NOT NULL DEFAULT nextval('viaje_id_viaje_seq'::regclass),
-    id_pasaje bigint NOT NULL,
-    id_vuelo bigint NOT NULL,
-    CONSTRAINT vpkey_viaje PRIMARY KEY (id_viaje)
-);
-
 CREATE TABLE IF NOT EXISTS public.vuelo
 (
     id_vuelo integer NOT NULL,
     embarque date NOT NULL,
-    id_origen integer NOT NULL,
-    id_destino integer NOT NULL,
+    id_pasaje integer NOT NULL,
+    pais_destino character varying(80) NOT NULL,
+    pais_origen character varying(80) NOT NULL,
     CONSTRAINT vuelo_pkey PRIMARY KEY (id_vuelo)
 );
 
+CREATE TABLE IF NOT EXISTS public.sueldo
+(
+    id_empleado integer,
+    monto integer,
+    cargo "char",
+    PRIMARY KEY (id_empleado)
+);
+
+CREATE TABLE IF NOT EXISTS public.vuelo_cliente
+(
+    vuelo_id_vuelo integer NOT NULL,
+    cliente_id_cliente integer NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.empleado_vuelo
+(
+    empleado_id_empleado integer NOT NULL,
+    vuelo_id_vuelo integer NOT NULL
+);
+
 ALTER TABLE IF EXISTS public.avion
-    ADD CONSTRAINT id_compania_fk FOREIGN KEY (id_compania)
+    ADD FOREIGN KEY (id_avion)
     REFERENCES public.compania (id_compania) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -110,23 +110,15 @@ ALTER TABLE IF EXISTS public.avion
 
 
 ALTER TABLE IF EXISTS public.avion
-    ADD CONSTRAINT id_modelo_fk FOREIGN KEY (id_modelo)
+    ADD FOREIGN KEY (id_modelo)
     REFERENCES public.modelo (id_modelo) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.cliente
-    ADD CONSTRAINT id_pais_fk FOREIGN KEY (id_pais)
-    REFERENCES public.pais (id_pais) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.compra
-    ADD CONSTRAINT id_cliente_fk FOREIGN KEY (id_cliente)
+ALTER TABLE IF EXISTS public.compania
+    ADD FOREIGN KEY (id_cliente)
     REFERENCES public.cliente (id_cliente) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -134,7 +126,7 @@ ALTER TABLE IF EXISTS public.compra
 
 
 ALTER TABLE IF EXISTS public.compra
-    ADD CONSTRAINT id_pasaje_fk FOREIGN KEY (id_pasaje)
+    ADD FOREIGN KEY (id_pasaje)
     REFERENCES public.pasaje (id_pasaje) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -142,60 +134,64 @@ ALTER TABLE IF EXISTS public.compra
 
 
 ALTER TABLE IF EXISTS public.empleado
-    ADD CONSTRAINT id_compania_fk FOREIGN KEY (id_compania)
-    REFERENCES public.compania (id_compania) MATCH SIMPLE
+    ADD FOREIGN KEY (id_avion)
+    REFERENCES public.avion (id_avion) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.log_vuelo_empleado
-    ADD CONSTRAINT id_empleado FOREIGN KEY (id_empleado)
-    REFERENCES public.empleado (id_empleado) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
-ALTER TABLE IF EXISTS public.log_vuelo_empleado
-    ADD CONSTRAINT id_vuelo FOREIGN KEY (id_vuelo)
-    REFERENCES public.vuelo (id_vuelo) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
 ALTER TABLE IF EXISTS public.pasaje
-    ADD CONSTRAINT id_clase_fk FOREIGN KEY (id_clase)
+    ADD FOREIGN KEY (id_clase)
     REFERENCES public.clase (id_clase) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.viaje
-    ADD CONSTRAINT id_pasaje FOREIGN KEY (id_pasaje)
-    REFERENCES public.pasaje (id_pasaje) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
-ALTER TABLE IF EXISTS public.viaje
-    ADD CONSTRAINT id_vuelo FOREIGN KEY (id_vuelo)
-    REFERENCES public.vuelo (id_vuelo) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
 ALTER TABLE IF EXISTS public.vuelo
-    ADD CONSTRAINT id_destino FOREIGN KEY (id_destino)
-    REFERENCES public.pais (id_pais) MATCH SIMPLE
+    ADD FOREIGN KEY (id_pasaje)
+    REFERENCES public.pasaje (id_pasaje) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.vuelo
-    ADD CONSTRAINT id_origen FOREIGN KEY (id_origen)
-    REFERENCES public.pais (id_pais) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.sueldo
+    ADD FOREIGN KEY (id_empleado)
+    REFERENCES public.empleado (id_empleado) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.vuelo_cliente
+    ADD FOREIGN KEY (vuelo_id_vuelo)
+    REFERENCES public.vuelo (id_vuelo) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.vuelo_cliente
+    ADD FOREIGN KEY (cliente_id_cliente)
+    REFERENCES public.cliente (id_cliente) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.empleado_vuelo
+    ADD FOREIGN KEY (empleado_id_empleado)
+    REFERENCES public.empleado (id_empleado) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.empleado_vuelo
+    ADD FOREIGN KEY (vuelo_id_vuelo)
+    REFERENCES public.vuelo (id_vuelo) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
