@@ -86,8 +86,9 @@ CREATE TABLE IF NOT EXISTS public.vuelo
 
 CREATE TABLE IF NOT EXISTS public.sueldo
 (
-    id_empleado integer,
-    monto integer,
+    id_empleado integer NOT NULL,
+    monto integer NOT NULL,
+    fecha date NOT NULL,
     PRIMARY KEY (id_empleado)
 );
 
