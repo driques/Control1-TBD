@@ -101,8 +101,18 @@ try:
         id += 1
     
     # empleado_vuelo(id_empleado, id_vuelo)
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO empleado_vuelo(id_empleado, id_vuelo) VALUES(%s,%s)", (randint(0,19), id))
+        id += 1
 
     # vuelo_cliente(id_vuelo, id_cliente)
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO vuelo_cliente(id_vuelo, id_cliente) VALUES(%s,%s)", (id, randint(0,19)))
+        id += 1
 
     connection.commit()
     print('Base de datos rellenada con nuevos datos')
