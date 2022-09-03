@@ -31,7 +31,6 @@ try:
     ###### Insert ######
 
     ### CLIENTE
-    
     for k in range(20):
         cursor.execute("INSERT INTO cliente (id_cliente, nombre, dni, pais, id_vuelo) VALUES(%s,%s,%s,%s,%s)", (k, fake.name(), fake.ean(length=8), fake.country(), randint(0,20)))
 
@@ -70,19 +69,40 @@ try:
     id = 0
     for k in range(40):
         cursor.execute(
-            "INSERT INTO empleado (id_empleado, dni, nombre, id_compania, id_avion, cargo) VALUES(%s,%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(0,4), randint(0,19), choice(["Piloto", "Azafata", "Jefe de vuelo", "Jefe de mantenimiento", "Mantenimiento"])))
+            "INSERT INTO empleado (id_empleado, dni, nombre, id_compania, id_avion, cargo) VALUES(%s,%s,%s,%s,%s,%s)", (k, fake.ean(length=8), fake.name(), randint(0,4), randint(0,19), choice(["Piloto", "Azafata", "Jefe de vuelo", "Jefe de mantenimiento", "Mantenimiento"])))
         id += 1
-        
-    # VUELO
 
     # PASAJE
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO pasaje(id_pasaje, id_clase, valor) VALUES(%s,%s,%s)", (id, randint(0,3), randint(100, 500)))
+        id += 1
 
-    # COMPRA
+    # VUELO
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO vuelo(id_vuelo, embarque, id_pasaje, pais_destino, pais_origen) VALUES(%s,%s,%s,%s,%s)", (id, fake.date(), randint(0,19), fake.country(), fake.country()))
+        id += 1
 
+    # sueldo
+    id = 0
+    for k in range(40):
+        cursor.execute(
+            "INSERT INTO sueldo(id_empleado, monto, fecha) VALUES(%s,%s,%s)", (id, randint(100, 500), fake.date()))
+        id += 1
     
-    # log_vuelo_avion
+    # compra
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO compra(monto, fecha, id_compra, id_cliente, id_pasaje) VALUES(%s,%s,%s,%s,%s)", (randint(100, 500), fake.date(), id, randint(0,19), randint(0,19)))
+        id += 1
+    
+    # empleado_vuelo(id_empleado, id_vuelo)
 
-    # log_vuelo_empleado
+    # vuelo_cliente(id_vuelo, id_cliente)
 
     connection.commit()
     print('Base de datos rellenada con nuevos datos')
