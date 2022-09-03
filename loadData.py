@@ -7,7 +7,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="admin", database="aerov3")
+        host="localhost", user="postgres", password="1234", database="ultima")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -71,16 +71,21 @@ try:
             "INSERT INTO avion (id_avion, id_modelo, id_compania, capacidad) VALUES(%s,%s,%s,%s)", (id, randint(0, len(listamodelos)-1), randint(0, len(listacompanias)-1), randint(160, 480)))
         id += 1
         
+    cantidadempleados = -1
     # EMPLEADO
     id = 0
     for k in range(40):
+        cantidadempleados+=1
         cursor.execute(
             "INSERT INTO empleado (id_empleado, dni, nombre, sueldo,id_compania) VALUES(%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(1000, 8000), randint(0, len(listacompanias)-1)))
         id += 1
-        
+
+
+    cantidadvuelos=-1
     # VUELO
     id = 0
     for k in range(20):
+        cantidadvuelos+=1
         cursor.execute(
             "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, len(listacompanias)-1), randint(0, len(listacompanias)-1)))
         id += 1
@@ -114,11 +119,12 @@ try:
         cursor.execute(
             "INSERT INTO log_vuelo_avion (id_vuelo, id_avion, id_avion_vuelo) values(%s,%s,%s)", (randint(0, 19), randint(0, 19), id))
         id += 1
+
     #log_vuelo_empleado
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO log_vuelo_empleado (id_vuelo, id_empleado, id_log_vuelo_empleado) values(%s,%s,%s)", (randint(0, 19), randint(0, 40), id))
+            "INSERT INTO log_vuelo_empleado (id_vuelo, id_empleado, id_log_vuelo_empleado) values(%s,%s,%s)", (randint(0, cantidadvuelos), randint(0, cantidadempleados), id))
         id += 1
 
 
@@ -126,7 +132,7 @@ try:
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO log_empleado_cargo (id_log_emp_car, id_empleado, id_cargo) values(%s,%s,%s)", (id, randint(0, 40),randint(0,2)))
+            "INSERT INTO log_empleado_cargo (id_log_emp_car, id_empleado, id_cargo) values(%s,%s,%s)", (id, randint(0, cantidadempleados), randint(0,2)))
         id += 1
 
     
