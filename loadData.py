@@ -7,7 +7,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="postgres", database="Aerolinea")
+        host="localhost", user="postgres", password="admin", database="aerov8")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -17,22 +17,24 @@ try:
     cursor.execute("TRUNCATE TABLE cliente CASCADE")
     cursor.execute("TRUNCATE TABLE compania CASCADE")
     cursor.execute("TRUNCATE TABLE compra CASCADE")
-    cursor.execute("TRUNCATE TABLE empleado_vuelo CASCADE")
-    cursor.execute("TRUNCATE TABLE modelo CASCADE")
-    cursor.execute("TRUNCATE TABLE pasaje CASCADE")
-    cursor.execute("TRUNCATE TABLE sueldo CASCADE")
     cursor.execute("TRUNCATE TABLE empleado CASCADE")
+    cursor.execute("TRUNCATE TABLE modelo CASCADE")
+    cursor.execute("TRUNCATE TABLE pais CASCADE")   
     cursor.execute("TRUNCATE TABLE vuelo CASCADE")
-    cursor.execute("TRUNCATE TABLE vuelo_cliente CASCADE")
     connection.commit()
 
     print('Datos de tablas existentes eleminadas')
     
     ###### Insert ######
 
+    ### PAIS
+    for k in range(21):
+        cursor.execute(
+            "INSERT INTO pais (nombre, id_pais) VALUES(%s,%s)", (fake.country(), k))
+
     ### CLIENTE
     for k in range(20):
-        cursor.execute("INSERT INTO cliente (id_cliente, nombre, dni, pais, id_vuelo) VALUES(%s,%s,%s,%s,%s)", (k, fake.name(), fake.ean(length=8), fake.country(), randint(0,20)))
+        cursor.execute("INSERT INTO cliente (id_cliente, nombre, id_pais, dni) VALUES(%s,%s,%s,%s)",(k, fake.name(), randint(0, 20), fake.ean(length=8)))
 
     ### CLASE
     listaclases = ["Economy", "Premium economy", "Business", "First class"]
@@ -55,64 +57,49 @@ try:
     id = 0
     for k in listacompanias:
         cursor.execute(
-            "INSERT INTO compania (id_compania, nombre, id_cliente, fecha) VALUES(%s,%s,%s,%s)", (id, k, randint(0,19), fake.date()))
+            "INSERT INTO compania (id_compania, nombre) VALUES(%s,%s)", (id, k))
         id += 1
     
     ### AVION
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO avion (id_avion, id_modelo, capacidad, id_compañia)  VALUES(%s,%s,%s,%s)", (id, randint(0,4), randint(100, 500), randint(0,4)))
+            "INSERT INTO avion (id_avion, id_modelo, id_compania, capacidad) VALUES(%s,%s,%s,%s)", (id, randint(0, len(listamodelos)-1), randint(0, len(listacompanias)-1), randint(160, 480)))
         id += 1
         
     # EMPLEADO
     id = 0
     for k in range(40):
         cursor.execute(
-            "INSERT INTO empleado (id_empleado, dni, nombre, id_compania, id_avion, cargo) VALUES(%s,%s,%s,%s,%s,%s)", (k, fake.ean(length=8), fake.name(), randint(0,4), randint(0,19), choice(["Piloto", "Azafata", "Jefe de vuelo", "Jefe de mantenimiento", "Mantenimiento"])))
+            "INSERT INTO empleado (id_empleado, dni, nombre, sueldo,id_compania) VALUES(%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(1000, 8000), randint(0, len(listacompanias)-1)))
         id += 1
-
-    # PASAJE
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO pasaje(id_pasaje, id_clase, valor) VALUES(%s,%s,%s)", (id, randint(0,3), randint(100, 500)))
-        id += 1
-
+        
     # VUELO
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO vuelo(id_vuelo, embarque, id_pasaje, pais_destino, pais_origen) VALUES(%s,%s,%s,%s,%s)", (id, fake.date(), randint(0,19), fake.country(), fake.country()))
+            "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, len(listacompanias)-1), randint(0, len(listacompanias)-1)))
         id += 1
+    print("aqui")
 
-    # sueldo
-    id = 0
-    for k in range(40):
-        cursor.execute(
-            "INSERT INTO sueldo(id_empleado, monto, fecha) VALUES(%s,%s,%s)", (id, randint(100, 500), fake.date()))
-        id += 1
     
-    # compra
+    # PASAJE
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO compra(monto, fecha, id_compra, id_cliente, id_pasaje) VALUES(%s,%s,%s,%s,%s)", (randint(100, 500), fake.date(), id, randint(0,19), randint(0,19)))
+            "INSERT INTO pasaje (id_pasaje,id_vuelo, id_clase,precio) values(%s,%s,%s,%s)", (id, randint(0, 19), randint(0, len(listaclases)-1),randint(30,2000)))
         id += 1
-    
-    # empleado_vuelo(id_empleado, id_vuelo)
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO empleado_vuelo(id_empleado, id_vuelo) VALUES(%s,%s)", (randint(0,19), id))
-        id += 1
+    print("aca")
 
-    # vuelo_cliente(id_vuelo, id_cliente)
+    # COMPRA
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO vuelo_cliente(id_vuelo, id_cliente) VALUES(%s,%s)", (id, randint(0,19)))
+            "INSERT INTO compra (id_compra, monto, fecha , id_cliente, id_pasaje) values(%s,%s,%s,%s,%s)", (id, randint(1000, 8000), fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, 19), randint(0, 19)))
         id += 1
+    # log_vuelo_avion
+
+    # log_vuelo_empleado
 
     connection.commit()
     print('Base de datos rellenada con nuevos datos')
