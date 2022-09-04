@@ -1,30 +1,30 @@
 from faker import Faker
 from random import randint
 from random import choice
+from random import sample
 import psycopg2
 
 fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="postgres", database="Aero")
+        host="localhost", user="postgres", password="admin", database="aero")
     cursor = connection.cursor()
 
     ###### Delete ######
     # Delete all rows from table
     cursor.execute("TRUNCATE TABLE avion CASCADE")
-    cursor.execute("TRUNCATE TABLE cargo CASCADE")
     cursor.execute("TRUNCATE TABLE clase CASCADE")
     cursor.execute("TRUNCATE TABLE cliente CASCADE")
     cursor.execute("TRUNCATE TABLE compania CASCADE")
     cursor.execute("TRUNCATE TABLE compra CASCADE")
     cursor.execute("TRUNCATE TABLE empleado CASCADE")
-    cursor.execute("TRUNCATE TABLE empleado_cargo CASCADE")
     cursor.execute("TRUNCATE TABLE modelo CASCADE")
-    cursor.execute("TRUNCATE TABLE pago CASCADE")
-    cursor.execute("TRUNCATE TABLE pais CASCADE") 
-    cursor.execute("TRUNCATE TABLE pasaje CASCADE")  
+    cursor.execute("TRUNCATE TABLE pais CASCADE")   
     cursor.execute("TRUNCATE TABLE vuelo CASCADE")
+    cursor.execute("TRUNCATE TABLE cargo CASCADE")
+    cursor.execute("TRUNCATE TABLE pago CASCADE")
+    cursor.execute("TRUNCATE TABLE empleado_cargo CASCADE")
     cursor.execute("TRUNCATE TABLE vuelo_avion CASCADE")
     cursor.execute("TRUNCATE TABLE vuelo_empleado CASCADE")
     connection.commit()
@@ -76,13 +76,21 @@ try:
             "INSERT INTO avion (id, id_modelo, id_compania, capacidad,dia,mes,anno) VALUES(%s,%s,%s,%s,%s,%s,%s)", (id, randint(0, len(listamodelos)-1), randint(0, len(listacompanias)-1), randint(160, 480),randint(1, 31), randint(1, 12), randint(1970, 2020)))
         id += 1
         
+     # cargos
+    cargos = ["piloto","mecanico","asafata"]
+    id = 0
+    for k in range(3):
+        cursor.execute(
+            "INSERT INTO cargo (id, nombre) values(%s,%s)", (id, cargos[id]))
+        id += 1
+
     cantidadempleados = -1
     # EMPLEADO
     id = 0
     for k in range(40):
         cantidadempleados+=1
         cursor.execute(
-            "INSERT INTO empleado (id, dni, nombre, sueldo,id_compania,dia,mes,anno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(1000, 8000), randint(0, len(listacompanias)-1), randint(1, 31), randint(1, 12), randint(1970, 2022)))
+            "INSERT INTO empleado (id, dni, nombre, sueldo,id_compania,id_cargo,dia,mes,anno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)", (id, fake.ean(length=8), fake.name(), randint(1000, 8000), randint(0, len(listacompanias)-1),randint(0, len(cargos)-1), randint(1, 31), randint(1, 12), randint(1970, 2022)))
         id += 1
 
 
@@ -110,19 +118,29 @@ try:
         id += 1
 
     
-    # cargos
-    cargos = ["piloto","mecanico","asafata"]
-    id = 0
-    for k in range(3):
-        cursor.execute(
-            "INSERT INTO cargo (id, nombre) values(%s,%s)", (id, cargos[id]))
-        id += 1
+   
 
     # COMPRA
     id = 0
+    def unico(x,L):
+      esUnico=True
+      for i in range(len(L)):
+        if x==L[i]:
+          esUnico=False
+          break
+      return esUnico
+    L=[]
+    j=0
+    while j<20:
+      x=randint(0,19)
+      if unico(x,L):
+        L.append(x)
+        j+=1
+    print(L)
+    
     for k in range(20):
         cursor.execute(
-            "INSERT INTO compra (id, monto, id_cliente, id_pasaje,dia,mes,anno) values(%s,%s,%s,%s,%s,%s,%s)", (id, randint(1000, 8000), randint(0, 19), randint(0, 19),randint(1, 31), randint(1, 12), randint(1970, 2022)))
+            "INSERT INTO compra (id, monto, id_cliente, id_pasaje,dia,mes,anno) values(%s,%s,%s,%s,%s,%s,%s)", (id, randint(1000, 8000),randint(0, 19),L[k] ,randint(1, 31), randint(1, 12), randint(1970, 2022)))
         id += 1
 
 
