@@ -7,7 +7,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="1234", database="ultima")
+        host="localhost", user="postgres", password="postgres", database="newAero")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -87,7 +87,7 @@ try:
     for k in range(20):
         cantidadvuelos+=1
         cursor.execute(
-            "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0, len(listacompanias)-1), randint(0, len(listacompanias)-1)))
+            "INSERT INTO vuelo (id_vuelo,embarque,id_origen, id_destino) values(%s,%s,%s,%s)", (id, fake.date_time_between(start_date="-5y", end_date="now", tzinfo=None), randint(0,20), randint(0, 20)))
         id += 1
 
 
