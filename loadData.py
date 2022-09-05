@@ -8,7 +8,7 @@ fake = Faker()
 
 try:
     connection = psycopg2.connect(
-        host="localhost", user="postgres", password="admin", database="aero")
+        host="localhost", user="postgres", password="postgres", database="aero2")
     cursor = connection.cursor()
 
     ###### Delete ######
@@ -108,19 +108,6 @@ try:
             "INSERT INTO vuelo (id,id_origen, id_destino,dia,mes,anno) values(%s,%s,%s,%s,%s,%s)", (id, randint(0, 20), randint(0, 20), randint(1, 31), randint(1, 12), randint(1970, 2022)))
         id += 1
 
-    
-    
-    # PASAJE
-    id = 0
-    for k in range(20):
-        cursor.execute(
-            "INSERT INTO pasaje (id,id_vuelo, id_clase) values(%s,%s,%s)", (id, randint(0, 19), randint(0, len(listaclases)-1)))
-        id += 1
-
-    
-   
-
-    # COMPRA
     id = 0
     def unico(x,L):
       esUnico=True
@@ -129,6 +116,7 @@ try:
           esUnico=False
           break
       return esUnico
+    
     L=[]
     j=0
     while j<20:
@@ -136,7 +124,28 @@ try:
       if unico(x,L):
         L.append(x)
         j+=1
-    print(L)
+    
+    
+    
+    # PASAJE
+    id = 0
+    for k in range(20):
+        cursor.execute(
+            "INSERT INTO pasaje (id,id_vuelo, id_clase) values(%s,%s,%s)", (id, L[k], randint(0, len(listaclases)-1)))
+        id += 1
+
+    
+   
+
+    # COMPRA
+    
+    L=[]
+    j=0
+    while j<20:
+      x=randint(0,19)
+      if unico(x,L):
+        L.append(x)
+        j+=1
     
     for k in range(20):
         cursor.execute(
@@ -146,10 +155,27 @@ try:
 
    
     # log_vuelo_avion
+    L=[]
+    j=0
+    while j<20:
+      x=randint(0,19)
+      if unico(x,L):
+        L.append(x)
+        j+=1
+ 
+    
+    L2=[]
+    j=0
+    while j<20:
+      x=randint(0,19)
+      if unico(x,L2):
+        L2.append(x)
+        j+=1
+
     id = 0
     for k in range(20):
         cursor.execute(
-            "INSERT INTO vuelo_avion (id, id_vuelo, id_avion) values(%s,%s,%s)", (id,randint(0, 19), randint(0, 19)))
+            "INSERT INTO vuelo_avion (id, id_vuelo, id_avion) values(%s,%s,%s)", (id,L[k], L2[k]))
         id += 1
 
 
