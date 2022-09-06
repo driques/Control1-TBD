@@ -15,28 +15,21 @@ FROM(  SELECT COUNT(*) AS cantidad, vuelo.id_destino
 
 --2)) lista con las secciones de vuelo más comprada por Argentinos
 
-SELECT clase.nombre, COUNT(*) as "cantidad comprada"
-FROM clase
-INNER JOIN pasaje ON pasaje.id_clase = clase.id
-INNER JOIN compra ON compra.id_pasaje = pasaje.id
-INNER JOIN cliente ON cliente.id = compra.id_cliente
-INNER JOIN pais ON pais.id = cliente.id_pais
-WHERE pais.nombre = 'Argentina'
+SELECT clase.nombre
+FROM clase, compra, cliente, pais,pasaje
+WHERE pais.nombre = 'Argentina' and pais.id = cliente.id_pais and pasaje.id = compra.id_pasaje 
+and compra.id_cliente = cliente.id
 GROUP BY clase.id
-ORDER BY count(clase.id) DESC;
+ORDER BY count(clase.id) DESC limit 2;
 
 --3) lista mensual de países que más gastan en volar (durante los últimos 4 años)
 
-SELECT pais.nombre, pais_gasto.total_gasto
-FROM (
-    SELECT vuelo.id_destino, SUM(compra.monto) as total_gasto 
-	FROM compra, pasaje, vuelo 
-	WHERE compra.id_pasaje = pasaje.id 
-	AND pasaje.id_vuelo = vuelo.id 
-	AND compra.anno = '2018' or compra.anno = '2019' or compra.anno ='2020' or compra.anno ='2021'
-
-    GROUP BY vuelo.id_destino ORDER BY total_gasto DESC LIMIT 3
-) as pais_gasto, pais WHERE pais.id = pais_gasto.id_destino
+SELECT DISTINCT ON (compra.anno,compra.mes) compra.anno as "anno compra", compra.mes as "mes compra ", 
+pais.nombre as "pais de compra", SUM(compra.monto) as "cantidad total"
+FROM pais, compra, vuelo, pasaje
+WHERE pais.id = vuelo.id_origen and compra.id_pasaje = pasaje.id and pasaje.id_vuelo = vuelo.id
+and compra.dia > 1 and compra.mes > 1 and compra.anno > 2018
+GROUP BY compra.anno, compra.mes, pais.nombre;
 
 
 --4) lista de pasajeros que viajan en “First Class” más de 4 veces al mes
@@ -55,14 +48,14 @@ group by vuelo.mes,cliente.id,vuelo.id,vuelo.anno;
 select cliente_id, count(mes) as "veces_viaje",mes,anno
 from suma_meses
 group by cliente_id,mes,anno
-having count(mes)>4
+having count(mes)>4;
 
 
 --5) avión con menos vuelos
 SELECT vuelo_avion.id_avion, count(*) as cantidad_vuelos FROM avion, vuelo_avion WHERE vuelo_avion.id_avion = avion.id GROUP BY vuelo_avion.id_avion
 UNION
 SELECT avion.id, 0 as cantidad_vuelos FROM avion WHERE avion.id NOT IN (SELECT vuelo_avion.id_avion FROM vuelo_avion)
-ORDER BY cantidad_vuelos ASC LIMIT 1
+ORDER BY cantidad_vuelos ASC LIMIT 1;
 
 --6) lista de mensual de pilotos con mayor sueldo durante los últimos 4 años
 select DISTINCT ON(pago.anno,pago.mes) pago.anno, pago.mes, empleado.nombre, empleado.sueldo, cargo.nombre as "cargo" from pago,empleado,cargo,compania 
